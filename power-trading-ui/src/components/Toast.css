@@ -1,0 +1,180 @@
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  min-width: 300px;
+  max-width: 500px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10000;
+  animation: toast-slide-in 0.3s ease-out;
+  overflow: hidden;
+}
+
+@keyframes toast-slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.toast-content {
+  display: flex;
+  align-items: flex-start;
+  padding: 16px 20px;
+  gap: 12px;
+}
+
+.toast-icon-wrapper {
+  flex-shrink: 0;
+}
+
+.toast-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.toast-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.toast-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.toast-message {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #666;
+}
+
+
+.toast-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.toast-close:hover {
+  color: #333;
+}
+
+/* 成功类型 */
+.toast-success {
+  border-left: 4px solid #52c41a;
+  background: linear-gradient(to right, #f6ffed 0%, #ffffff 10%);
+}
+
+.toast-success .toast-icon {
+  background-color: #52c41a;
+  color: white;
+  box-shadow: 0 2px 8px rgba(82, 196, 26, 0.3);
+}
+
+.toast-success .toast-title {
+  color: #52c41a;
+}
+
+/* 错误类型 */
+.toast-error {
+  border-left: 4px solid #ff4d4f;
+}
+
+.toast-error .toast-icon {
+  background-color: #fff2f0;
+  color: #ff4d4f;
+}
+
+/* 警告类型 */
+.toast-warning {
+  border-left: 4px solid #faad14;
+}
+
+.toast-warning .toast-icon {
+  background-color: #fffbe6;
+  color: #faad14;
+}
+
+/* 信息类型 */
+.toast-info {
+  border-left: 4px solid #FF8C00;
+}
+
+.toast-info .toast-icon {
+  background-color: #fff8e1;
+  color: #FF8C00;
+}
+
+/* 进度条 */
+.toast-progress {
+  height: 3px;
+  background-color: #f0f0f0;
+  overflow: hidden;
+}
+
+.toast-progress-bar {
+  height: 100%;
+  background-color: currentColor;
+  animation: toast-progress-animation linear forwards;
+}
+
+@keyframes toast-progress-animation {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.toast-success .toast-progress-bar {
+  background-color: #52c41a;
+}
+
+.toast-error .toast-progress-bar {
+  background-color: #ff4d4f;
+}
+
+.toast-warning .toast-progress-bar {
+  background-color: #faad14;
+}
+
+.toast-info .toast-progress-bar {
+  background-color: #FF8C00;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .toast {
+    right: 10px;
+    left: 10px;
+    min-width: auto;
+    max-width: none;
+  }
+}
+

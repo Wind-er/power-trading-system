@@ -1,0 +1,87 @@
+.trades {
+  padding: 24px;
+}
+
+.trades h2 {
+  margin-bottom: 24px;
+  color: #333;
+}
+
+.trades-table {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.trades-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.trades-table th,
+.trades-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.trades-table th {
+  background-color: #fafafa;
+  font-weight: 600;
+  color: #333;
+}
+
+.trades-table tr:hover {
+  background-color: #fafafa;
+}
+
+.trades-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: 24px;
+  transition: background-color 0.2s;
+}
+
+.trades-table th.sortable:hover {
+  background-color: #f0f0f0;
+}
+
+.trades-table .sort-icon {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: #999;
+  font-weight: normal;
+}
+
+.trades-table th.sortable:hover .sort-icon {
+  color: #FF8C00;
+}
+
+.role {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.role.buyer {
+  background: linear-gradient(135deg, #fff8e1, #ffe0b2);
+  color: #FF8C00;
+  font-weight: 500;
+}
+
+.role.seller {
+  background-color: #fff7e6;
+  color: #fa8c16;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+}
+

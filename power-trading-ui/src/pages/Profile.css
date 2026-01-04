@@ -1,0 +1,165 @@
+.profile {
+  padding: 24px;
+}
+
+.profile h2 {
+  margin-bottom: 24px;
+  color: #333;
+}
+
+.profile-card {
+  background: white;
+  padding: 32px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+}
+
+.profile-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.profile-item:last-child {
+  border-bottom: none;
+}
+
+.profile-item .label {
+  color: #666;
+  font-weight: 500;
+}
+
+.profile-item .value {
+  color: #333;
+}
+
+.profile-item .value.status.active {
+  color: #52c41a;
+}
+
+.profile-item .value.status.inactive {
+  color: #ff4d4f;
+}
+
+.profile-input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 200px;
+}
+
+.profile-input:focus {
+  outline: none;
+  border-color: #FF8C00;
+  box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.1);
+}
+
+.error-message {
+  color: #ff4d4f;
+  padding: 12px;
+  background-color: #fff2f0;
+  border-radius: 4px;
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+.profile-actions {
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+}
+
+.edit-button,
+.save-button,
+.cancel-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.edit-button {
+  background: linear-gradient(135deg, #FF8C00, #FFA500);
+  color: white;
+  box-shadow: 0 2px 6px rgba(255, 140, 0, 0.3);
+}
+
+.edit-button:hover {
+  background: linear-gradient(135deg, #FFA500, #FFB84D);
+  box-shadow: 0 4px 10px rgba(255, 140, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+.save-button {
+  background-color: #52c41a;
+  color: white;
+}
+
+.save-button:hover:not(:disabled) {
+  background-color: #73d13d;
+}
+
+.save-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.cancel-button {
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.cancel-button:hover {
+  background-color: #e0e0e0;
+}
+
+.profile-statistics {
+  margin-top: 24px;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.profile-statistics h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  color: #333;
+  font-size: 18px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+}
+
+.stat-label {
+  color: #666;
+  font-size: 14px;
+}
+
+.stat-value {
+  color: #333;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.stat-value.highlight {
+  color: #FF8C00;
+  font-size: 18px;
+  font-weight: 600;
+}
+

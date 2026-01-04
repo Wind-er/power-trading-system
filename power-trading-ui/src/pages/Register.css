@@ -1,0 +1,96 @@
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #FF8C00 0%, #FFA500 50%, #FFD700 100%);
+}
+
+.register-box {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.register-box h2 {
+  margin-bottom: 24px;
+  text-align: center;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #666;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #FF8C00;
+  box-shadow: 0 0 0 2px rgba(255, 140, 0, 0.1);
+}
+
+.error-message {
+  color: #ff4d4f;
+  margin-bottom: 16px;
+  padding: 8px;
+  background-color: #fff2f0;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.register-box button {
+  width: 100%;
+  padding: 12px;
+  background-color: #1890ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.register-box button:hover:not(:disabled) {
+  background-color: #40a9ff;
+}
+
+.register-box button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.login-link {
+  margin-top: 16px;
+  text-align: center;
+  color: #666;
+}
+
+.login-link a {
+  color: #FF8C00;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
