@@ -7,8 +7,9 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
-        changeOrigin: true
+        target: 'http://localhost:8000', // 网关服务端口
+        changeOrigin: true,
+        secure: false
       }
     }
   }

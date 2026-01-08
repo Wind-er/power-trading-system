@@ -1,0 +1,25 @@
+server:
+  port: 8005
+
+spring:
+  application:
+    name: matching-service
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: 674ea0ed-9be0-4c8b-88d9-1305aa71e336
+        group: DEFAULT_GROUP
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+
+logging:
+  level:
+    com.power.trading: DEBUG

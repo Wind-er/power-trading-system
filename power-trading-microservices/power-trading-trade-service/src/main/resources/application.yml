@@ -1,0 +1,45 @@
+server:
+  port: 8006
+
+spring:
+  application:
+    name: trade-service
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: 674ea0ed-9be0-4c8b-88d9-1305aa71e336
+        group: DEFAULT_GROUP
+  datasource:
+    url: jdbc:mysql://localhost:3306/power_trading_trade?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: power_trading
+    password: power_trading123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+seata:
+  enabled: true
+  application-id: trade-service
+  tx-service-group: power-trading-group
+  config:
+    type: nacos
+    nacos:
+      server-addr: localhost:8848
+      namespace: 674ea0ed-9be0-4c8b-88d9-1305aa71e336
+      group: SEATA_GROUP
+      data-id: seata.properties
+  registry:
+    type: nacos
+    nacos:
+      server-addr: localhost:8848
+      namespace: 674ea0ed-9be0-4c8b-88d9-1305aa71e336
+      group: SEATA_GROUP
+
+logging:
+  level:
+    com.power.trading: DEBUG

@@ -24,9 +24,32 @@ api.interceptors.request.use(
 
 // 响应拦截器 - 处理错误
 api.interceptors.response.use(
-  (response) => response.data,
+  (response) => {
+    // 如果响应数据已经是 ApiResponse 格式，直接返回
+    if (response.data && typeof response.data === 'object' && 'success' in response.data) {
+      return response.data
+    }
+    // 否则包装为标准格式
+    return {
+      success: true,
+      message: '操作成功',
+      data: response.data
+    }
+  },
   (error) => {
-    if (error.response?.status === 401) {
+    // 处理网络错误
+    if (!error.response) {
+      return Promise.reject({
+        success: false,
+        message: '网络错误，请检查网络连接',
+        data: null
+      })
+    }
+
+    const status = error.response.status
+    const message = error.response?.data?.message || error.message || '请求失败'
+
+    if (status === 401) {
       // Token过期或无效，清除认证信息
       localStorage.removeItem('token')
       localStorage.removeItem('user')
@@ -37,7 +60,14 @@ api.interceptors.response.use(
         window.location.href = `/login?from=${encodeURIComponent(currentPath)}`
       }
     }
-    return Promise.reject(error)
+
+    // 返回标准错误格式
+    return Promise.reject({
+      success: false,
+      message: message,
+      data: error.response?.data?.data || null,
+      status: status
+    })
   }
 )
 
@@ -90,6 +120,7 @@ export const orderApi = {
   getById: (id: number): Promise<ApiResponse<Order>> =>
     api.get(`/orders/${id}`),
   
+  // 匹配订单：路由到 /api/orders/{id}/match，由 order-service 处理或转发到 matching-service
   match: (targetOrderId: number, order: Partial<Order>): Promise<ApiResponse<Order>> =>
     api.post(`/orders/${targetOrderId}/match`, order),
   
@@ -104,6 +135,13 @@ export const orderApi = {
   
   cancel: (id: number): Promise<ApiResponse<string>> =>
     api.delete(`/orders/${id}`),
+}
+
+// 匹配服务 API（如果需要直接调用匹配服务）
+export const matchingApi = {
+  // 匹配订单：直接调用匹配服务
+  match: (targetOrderId: number, order: Partial<Order>): Promise<ApiResponse<Order>> =>
+    api.post('/matching/match', { targetOrderId, ...order }),
 }
 
 export const tradeApi = {

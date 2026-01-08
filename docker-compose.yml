@@ -1,0 +1,89 @@
+services:
+  # Nacos 服务注册发现和配置中心
+  nacos:
+    image: nacos/nacos-server:v2.2.0
+    container_name: nacos-server
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    environment:
+      MODE: standalone
+      # 暂时使用内置数据库，后续可以切换到 MySQL
+      # SPRING_DATASOURCE_PLATFORM: mysql
+      # MYSQL_SERVICE_HOST: mysql
+      # MYSQL_SERVICE_PORT: 3306
+      # MYSQL_SERVICE_DB_NAME: nacos_config
+      # MYSQL_SERVICE_USER: root
+      # MYSQL_SERVICE_PASSWORD: root123
+      # MYSQL_SERVICE_DB_PARAM: characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
+    volumes:
+      - nacos-data:/home/nacos/data
+      - nacos-logs:/home/nacos/logs
+    depends_on:
+      - mysql
+    networks:
+      - power-trading-network
+    restart: unless-stopped
+
+  # MySQL 数据库
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-server
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: nacos_config
+      TZ: Asia/Shanghai
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    command: 
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+    networks:
+      - power-trading-network
+    restart: unless-stopped
+
+  # Redis 缓存
+  redis:
+    image: redis:7-alpine
+    container_name: redis-server
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes --requirepass redis123
+    networks:
+      - power-trading-network
+    restart: unless-stopped
+
+  # Seata 分布式事务
+  seata-server:
+    image: seataio/seata-server:latest
+    container_name: seata-server
+    ports:
+      - "8091:8091"
+      - "7091:7091"
+    environment:
+      SEATA_PORT: 8091
+      STORE_MODE: db
+      SEATA_CONFIG_NAME: file:/root/seata-config/registry
+    volumes:
+      - ./docker/seata/conf:/root/seata-config
+    depends_on:
+      - mysql
+    networks:
+      - power-trading-network
+    restart: unless-stopped
+
+volumes:
+  mysql-data:
+  redis-data:
+  nacos-data:
+  nacos-logs:
+
+networks:
+  power-trading-network:
+    driver: bridge
