@@ -4,7 +4,7 @@ spring:
     name: power-trading-services
   
   datasource:
-    url: jdbc:h2:mem:power_trading
+    url: jdbc:h2:mem:power_trading;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false;MODE=MySQL
     driver-class-name: org.h2.Driver
     username: sa
     password: 
