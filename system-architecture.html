@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电力交易系统 - 微服务架构图</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        .nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            justify-content: center;
+        }
+
+        .nav-button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .nav-button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-button.active {
+            background: #764ba2;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .diagram-section {
+            display: none;
+            margin-bottom: 40px;
+        }
+
+        .diagram-section.active {
+            display: block;
+        }
+
+        .diagram-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .diagram-description {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+            border-radius: 4px;
+        }
+
+        .mermaid {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            overflow-x: auto;
+        }
+
+        .footer {
+            text-align: center;
+            color: #666;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .nav {
+                display: none;
+            }
+            .diagram-section {
+                display: block !important;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>电力交易系统微服务架构</h1>
+        <div class="subtitle">基于 Spring Cloud Alibaba 的分布式架构设计</div>
+
+        <div class="nav">
+            <button class="nav-button active" onclick="showDiagram('overview')">整体架构</button>
+            <button class="nav-button" onclick="showDiagram('sequence')">调用流程</button>
+            <button class="nav-button" onclick="showDiagram('dataflow')">数据流</button>
+            <button class="nav-button" onclick="showDiagram('deployment')">部署架构</button>
+            <button class="nav-button" onclick="showDiagram('network')">网络拓扑</button>
+            <button class="nav-button" onclick="showDiagram('dependency')">服务依赖</button>
+            <button class="nav-button" onclick="showDiagram('security')">安全架构</button>
+        </div>
+
+        <!-- 1. 整体架构图 -->
+        <div id="overview" class="diagram-section active">
+            <h2 class="diagram-title">1. 整体架构图</h2>
+            <div class="diagram-description">
+                展示了系统的完整架构，包括客户端层、网关层、微服务层、中间件层、数据存储层和监控运维层。
+                显示了各层之间的交互关系和依赖。
+            </div>
+            <div class="mermaid">
+graph TB
+    subgraph "客户端层"
+        Web[Web前端<br/>React+TypeScript]
+        Mobile[移动端<br/>可选]
+    end
+    
+    subgraph "网关层"
+        Gateway[API网关<br/>Spring Cloud Gateway<br/>:8000]
+    end
+    
+    subgraph "微服务层"
+        AuthService[认证服务<br/>auth-service<br/>:8002]
+        UserService[用户服务<br/>user-service<br/>:8001]
+        ProductService[商品服务<br/>product-service<br/>:8003]
+        OrderService[订单服务<br/>order-service<br/>:8004]
+        MatchingService[撮合服务<br/>matching-service<br/>:8005]
+        TradeService[交易服务<br/>trade-service<br/>:8006]
+        MarketService[市场行情服务<br/>market-service<br/>:8007]
+    end
+    
+    subgraph "中间件层"
+        Nacos[Nacos<br/>服务注册发现<br/>配置中心<br/>:8848]
+        Redis[Redis<br/>缓存/分布式锁<br/>:6379]
+        RocketMQ[RocketMQ<br/>消息队列<br/>:9876]
+        Seata[Seata<br/>分布式事务<br/>:8091]
+    end
+    
+    subgraph "数据存储层"
+        DB1[(MySQL<br/>用户库<br/>power_trading_user)]
+        DB2[(MySQL<br/>商品库<br/>power_trading_product)]
+        DB3[(MySQL<br/>订单库<br/>power_trading_order)]
+        DB4[(MySQL<br/>交易库<br/>power_trading_trade)]
+        DB5[(MySQL<br/>行情库<br/>power_trading_market)]
+    end
+    
+    subgraph "监控运维层"
+        Prometheus[Prometheus<br/>指标收集]
+        Grafana[Grafana<br/>可视化监控]
+        SkyWalking[SkyWalking<br/>链路追踪<br/>:11800]
+        ELK[ELK Stack<br/>日志聚合]
+    end
+    
+    Web --> Gateway
+    Mobile --> Gateway
+    Gateway --> AuthService
+    Gateway --> UserService
+    Gateway --> ProductService
+    Gateway --> OrderService
+    Gateway --> MatchingService
+    Gateway --> TradeService
+    Gateway --> MarketService
+    
+    AuthService --> Nacos
+    UserService --> Nacos
+    ProductService --> Nacos
+    OrderService --> Nacos
+    MatchingService --> Nacos
+    TradeService --> Nacos
+    MarketService --> Nacos
+    
+    AuthService --> Redis
+    UserService --> Redis
+    ProductService --> Redis
+    OrderService --> Redis
+    MarketService --> Redis
+    
+    OrderService --> RocketMQ
+    MatchingService --> RocketMQ
+    TradeService --> RocketMQ
+    MarketService --> RocketMQ
+    
+    OrderService --> Seata
+    TradeService --> Seata
+    
+    UserService --> DB1
+    AuthService --> DB1
+    ProductService --> DB2
+    OrderService --> DB3
+    TradeService --> DB4
+    MarketService --> DB5
+    
+    AuthService --> SkyWalking
+    UserService --> SkyWalking
+    ProductService --> SkyWalking
+    OrderService --> SkyWalking
+    MatchingService --> SkyWalking
+    TradeService --> SkyWalking
+    MarketService --> SkyWalking
+    
+    SkyWalking --> Prometheus
+    Prometheus --> Grafana
+    
+    style Gateway fill:#e1f5ff,stroke:#2196F3,stroke-width:2px
+    style Nacos fill:#fff4e1,stroke:#FF9800,stroke-width:2px
+    style Redis fill:#ffe1e1,stroke:#F44336,stroke-width:2px
+    style Seata fill:#e1ffe1,stroke:#4CAF50,stroke-width:2px
+    style RocketMQ fill:#f0e1ff,stroke:#9C27B0,stroke-width:2px
+            </div>
+        </div>
+
+        <!-- 2. 服务调用关系图 -->
+        <div id="sequence" class="diagram-section">
+            <h2 class="diagram-title">2. 服务调用关系图</h2>
+            <div class="diagram-description">
+                使用时序图展示了用户登录、创建订单和撮合交易的完整流程，清晰展示了服务间的调用顺序和交互过程。
+            </div>
+            <div class="mermaid">
+sequenceDiagram
+    participant Client as 客户端
+    participant Gateway as API网关
+    participant Auth as 认证服务
+    participant User as 用户服务
+    participant Product as 商品服务
+    participant Order as 订单服务
+    participant Matching as 撮合服务
+    participant Trade as 交易服务
+    participant Market as 市场行情服务
+    participant MQ as RocketMQ
+    participant Redis as Redis
+    participant DB as MySQL
+    
+    Note over Client,DB: 用户登录流程
+    Client->>Gateway: POST /api/auth/login
+    Gateway->>Auth: 转发登录请求
+    Auth->>DB: 验证用户信息
+    DB-->>Auth: 返回用户数据
+    Auth->>Redis: 存储Token
+    Auth-->>Gateway: 返回JWT Token
+    Gateway-->>Client: 返回Token
+    
+    Note over Client,DB: 创建订单流程
+    Client->>Gateway: POST /api/orders (带Token)
+    Gateway->>Auth: 验证Token
+    Auth-->>Gateway: Token有效
+    Gateway->>Order: 转发创建订单请求
+    Order->>User: 验证用户信息
+    User-->>Order: 用户有效
+    Order->>Product: 验证商品信息
+    Product-->>Order: 商品有效
+    Order->>DB: 保存订单
+    DB-->>Order: 订单创建成功
+    Order->>MQ: 发送撮合消息
+    Order-->>Gateway: 返回订单信息
+    Gateway-->>Client: 返回订单
+    
+    Note over Matching,Market: 撮合交易流程
+    MQ->>Matching: 撮合消息
+    Matching->>Order: 查询可撮合订单
+    Order-->>Matching: 返回订单列表
+    Matching->>Matching: 执行撮合逻辑
+    Matching->>Trade: 创建交易记录
+    Matching->>Order: 更新订单状态
+    Matching->>MQ: 发送交易完成消息
+    MQ->>Market: 行情更新消息
+    Market->>Redis: 更新行情缓存
+    Market->>DB: 保存历史行情
+            </div>
+        </div>
+
+        <!-- 3. 数据流架构图 -->
+        <div id="dataflow" class="diagram-section">
+            <h2 class="diagram-title">3. 数据流架构图</h2>
+            <div class="diagram-description">
+                展示了系统的数据流向，包括写入数据流（订单创建到行情更新）和读取数据流（缓存命中策略）。
+            </div>
+            <div class="mermaid">
+flowchart LR
+    subgraph "写入数据流"
+        W1[订单创建] --> W2[订单服务]
+        W2 --> W3[订单数据库]
+        W2 --> W4[发送MQ消息]
+        W4 --> W5[撮合服务]
+        W5 --> W6[交易服务]
+        W6 --> W7[交易数据库]
+        W6 --> W8[Seata事务]
+        W8 --> W2
+        W6 --> W9[发送MQ消息]
+        W9 --> W10[行情服务]
+        W10 --> W11[行情数据库]
+        W10 --> W12[Redis缓存]
+    end
+    
+    subgraph "读取数据流"
+        R1[客户端请求] --> R2[API网关]
+        R2 --> R3[验证Token]
+        R3 --> R4[业务服务]
+        R4 --> R5{Redis缓存?}
+        R5 -->|有缓存| R6[返回缓存数据]
+        R5 -->|无缓存| R7[查询数据库]
+        R7 --> R8[写入Redis]
+        R8 --> R6
+    end
+    
+    style W8 fill:#e1ffe1,stroke:#4CAF50,stroke-width:2px
+    style R5 fill:#ffe1e1,stroke:#F44336,stroke-width:2px
+            </div>
+        </div>
+
+        <!-- 4. 部署架构图 -->
+        <div id="deployment" class="diagram-section">
+            <h2 class="diagram-title">4. 部署架构图</h2>
+            <div class="diagram-description">
+                展示了在Kubernetes集群中的部署架构，包括不同命名空间的服务部署、Pod分布和负载均衡配置。
+            </div>
+            <div class="mermaid">
+graph TB
+    subgraph "Kubernetes集群"
+        subgraph "命名空间: power-trading"
+            subgraph "网关节点"
+                Gateway1[Gateway Pod1]
+                Gateway2[Gateway Pod2]
+            end
+            
+            subgraph "业务服务节点"
+                Auth1[Auth Pod1]
+                Auth2[Auth Pod2]
+                User1[User Pod1]
+                User2[User Pod2]
+                Product1[Product Pod1]
+                Product2[Product Pod2]
+                Order1[Order Pod1]
+                Order2[Order Pod2]
+                Order3[Order Pod3]
+            end
+            
+            subgraph "核心服务节点"
+                Matching1[Matching Pod1]
+                Matching2[Matching Pod2]
+                Matching3[Matching Pod3]
+                Trade1[Trade Pod1]
+                Trade2[Trade Pod2]
+                Market1[Market Pod1]
+                Market2[Market Pod2]
+            end
+        end
+        
+        subgraph "中间件命名空间: middleware"
+            NacosPod[Nacos Pod<br/>Standalone]
+            RedisPod[Redis Pod<br/>主从模式]
+            RocketMQPod[RocketMQ Pod<br/>Broker]
+            SeataPod[Seata Pod<br/>Server]
+        end
+        
+        subgraph "数据库命名空间: database"
+            MySQLPod1[MySQL Pod1<br/>用户库]
+            MySQLPod2[MySQL Pod2<br/>商品库]
+            MySQLPod3[MySQL Pod3<br/>订单库]
+            MySQLPod4[MySQL Pod4<br/>交易库]
+            MySQLPod5[MySQL Pod5<br/>行情库]
+        end
+        
+        subgraph "监控命名空间: monitoring"
+            PrometheusPod[Prometheus Pod]
+            GrafanaPod[Grafana Pod]
+            SkyWalkingPod[SkyWalking Pod]
+        end
+    end
+    
+    subgraph "外部访问"
+        LB[负载均衡器<br/>Nginx/云LB]
+        Users[用户]
+    end
+    
+    Users --> LB
+    LB --> Gateway1
+    LB --> Gateway2
+    
+    Gateway1 --> Auth1
+    Gateway1 --> User1
+    Gateway1 --> Product1
+    Gateway1 --> Order1
+    
+    Gateway2 --> Auth2
+    Gateway2 --> User2
+    Gateway2 --> Product2
+    Gateway2 --> Order2
+    
+    Order1 --> Matching1
+    Order2 --> Matching2
+    Order3 --> Matching3
+    
+    Matching1 --> Trade1
+    Matching2 --> Trade2
+    Matching3 --> Trade1
+    
+    Trade1 --> Market1
+    Trade2 --> Market2
+    
+    Auth1 --> NacosPod
+    User1 --> NacosPod
+    Product1 --> NacosPod
+    Order1 --> NacosPod
+    Matching1 --> NacosPod
+    Trade1 --> NacosPod
+    Market1 --> NacosPod
+    
+    User1 --> RedisPod
+    Product1 --> RedisPod
+    Order1 --> RedisPod
+    Market1 --> RedisPod
+    
+    Order1 --> RocketMQPod
+    Matching1 --> RocketMQPod
+    Trade1 --> RocketMQPod
+    
+    Order1 --> SeataPod
+    Trade1 --> SeataPod
+    
+    User1 --> MySQLPod1
+    Auth1 --> MySQLPod1
+    Product1 --> MySQLPod2
+    Order1 --> MySQLPod3
+    Trade1 --> MySQLPod4
+    Market1 --> MySQLPod5
+    
+    style LB fill:#ff9999,stroke:#F44336,stroke-width:2px
+    style Gateway1 fill:#99ccff,stroke:#2196F3,stroke-width:2px
+    style Gateway2 fill:#99ccff,stroke:#2196F3,stroke-width:2px
+    style NacosPod fill:#ffcc99,stroke:#FF9800,stroke-width:2px
+    style RedisPod fill:#ff9999,stroke:#F44336,stroke-width:2px
+            </div>
+        </div>
+
+        <!-- 5. 网络拓扑图 -->
+        <div id="network" class="diagram-section">
+            <h2 class="diagram-title">5. 网络拓扑图</h2>
+            <div class="diagram-description">
+                展示了系统的网络架构，从公网到内网的分层设计，包括DMZ区、应用层、服务层、中间件层、数据层和监控层。
+            </div>
+            <div class="mermaid">
+graph LR
+    subgraph "公网"
+        Internet[互联网]
+    end
+    
+    subgraph "DMZ区"
+        WAF[Web应用防火墙<br/>DDoS防护]
+        LB[负载均衡器<br/>Nginx/ALB]
+    end
+    
+    subgraph "应用层"
+        Gateway[API网关集群<br/>2-3个实例]
+    end
+    
+    subgraph "服务层-内网"
+        Auth[认证服务集群<br/>2个实例]
+        User[用户服务集群<br/>2个实例]
+        Product[商品服务集群<br/>2个实例]
+        Order[订单服务集群<br/>3个实例]
+        Matching[撮合服务集群<br/>3个实例]
+        Trade[交易服务集群<br/>2个实例]
+        Market[行情服务集群<br/>2个实例]
+    end
+    
+    subgraph "中间件层-内网"
+        Nacos[Nacos集群<br/>单机/集群]
+        Redis[Redis集群<br/>主从+哨兵]
+        RocketMQ[RocketMQ集群<br/>多Broker]
+        Seata[Seata Server<br/>TC服务]
+    end
+    
+    subgraph "数据层-内网"
+        MySQL_User[(MySQL主从<br/>用户库)]
+        MySQL_Product[(MySQL主从<br/>商品库)]
+        MySQL_Order[(MySQL主从<br/>订单库)]
+        MySQL_Trade[(MySQL主从<br/>交易库)]
+        MySQL_Market[(MySQL主从<br/>行情库)]
+    end
+    
+    subgraph "监控层-内网"
+        Prometheus[Prometheus]
+        Grafana[Grafana]
+        SkyWalking[SkyWalking]
+        ELK[ELK Stack]
+    end
+    
+    Internet --> WAF
+    WAF --> LB
+    LB --> Gateway
+    
+    Gateway --> Auth
+    Gateway --> User
+    Gateway --> Product
+    Gateway --> Order
+    Gateway --> Matching
+    Gateway --> Trade
+    Gateway --> Market
+    
+    Auth --> Nacos
+    User --> Nacos
+    Product --> Nacos
+    Order --> Nacos
+    Matching --> Nacos
+    Trade --> Nacos
+    Market --> Nacos
+    
+    User --> Redis
+    Product --> Redis
+    Order --> Redis
+    Market --> Redis
+    
+    Order --> RocketMQ
+    Matching --> RocketMQ
+    Trade --> RocketMQ
+    
+    Order --> Seata
+    Trade --> Seata
+    
+    User --> MySQL_User
+    Auth --> MySQL_User
+    Product --> MySQL_Product
+    Order --> MySQL_Order
+    Trade --> MySQL_Trade
+    Market --> MySQL_Market
+    
+    Auth --> SkyWalking
+    User --> SkyWalking
+    Product --> SkyWalking
+    Order --> SkyWalking
+    Matching --> SkyWalking
+    Trade --> SkyWalking
+    Market --> SkyWalking
+    
+    SkyWalking --> Prometheus
+    Prometheus --> Grafana
+    
+    style Internet fill:#ffcccc,stroke:#F44336,stroke-width:2px
+    style WAF fill:#ffffcc,stroke:#FFC107,stroke-width:2px
+    style LB fill:#ccffcc,stroke:#4CAF50,stroke-width:2px
+    style Gateway fill:#ccccff,stroke:#2196F3,stroke-width:2px
+    style Nacos fill:#ffccff,stroke:#9C27B0,stroke-width:2px
+    style Redis fill:#ff9999,stroke:#F44336,stroke-width:2px
+            </div>
+        </div>
+
+        <!-- 6. 服务依赖关系图 -->
+        <div id="dependency" class="diagram-section">
+            <h2 class="diagram-title">6. 服务依赖关系图</h2>
+            <div class="diagram-description">
+                清晰展示了各微服务之间的依赖关系，包括Feign调用、MQ消息、Seata分布式事务和缓存使用关系。
+            </div>
+            <div class="mermaid">
+graph TD
+    Gateway[API网关] --> Auth[认证服务]
+    Gateway --> User[用户服务]
+    Gateway --> Product[商品服务]
+    Gateway --> Order[订单服务]
+    Gateway --> Matching[撮合服务]
+    Gateway --> Trade[交易服务]
+    Gateway --> Market[市场行情服务]
+    
+    Order -->|Feign调用| User
+    Order -->|Feign调用| Product
+    Order -->|MQ消息| Matching
+    Order -->|Seata事务| Seata[Seata Server]
+    
+    Matching -->|Feign调用| Order
+    Matching -->|MQ消息| Trade
+    Matching -->|MQ消息| Market
+    
+    Trade -->|Feign调用| Order
+    Trade -->|Seata事务| Seata
+    Trade -->|MQ消息| Market
+    
+    Market -->|Feign调用| Product
+    
+    Auth -->|共享数据库| User
+    Auth -->|Redis| TokenStore[Token存储]
+    User -->|Redis| UserCache[用户缓存]
+    Product -->|Redis| ProductCache[商品缓存]
+    Market -->|Redis| MarketCache[行情缓存]
+    
+    Order -->|MySQL| OrderDB[(订单数据库)]
+    User -->|MySQL| UserDB[(用户数据库)]
+    Product -->|MySQL| ProductDB[(商品数据库)]
+    Trade -->|MySQL| TradeDB[(交易数据库)]
+    Market -->|MySQL| MarketDB[(行情数据库)]
+    
+    style Gateway fill:#e1f5ff,stroke:#2196F3,stroke-width:2px
+    style Seata fill:#e1ffe1,stroke:#4CAF50,stroke-width:2px
+    style TokenStore fill:#ffe1e1,stroke:#F44336,stroke-width:2px
+    style UserCache fill:#ffe1e1,stroke:#F44336,stroke-width:2px
+    style ProductCache fill:#ffe1e1,stroke:#F44336,stroke-width:2px
+    style MarketCache fill:#ffe1e1,stroke:#F44336,stroke-width:2px
+            </div>
+        </div>
+
+        <!-- 7. 安全架构图 -->
+        <div id="security" class="diagram-section">
+            <h2 class="diagram-title">7. 安全架构图</h2>
+            <div class="diagram-description">
+                展示了系统的安全防护体系，从客户端到数据层的多层安全防护机制，包括WAF、限流、认证授权、数据加密和审计日志。
+            </div>
+            <div class="mermaid">
+graph TB
+    subgraph "客户端"
+        Browser[浏览器]
+        MobileApp[移动应用]
+    end
+    
+    subgraph "安全防护层"
+        WAF[Web应用防火墙<br/>DDoS防护]
+        RateLimit[限流<br/>Sentinel]
+        CORS[CORS跨域控制]
+    end
+    
+    subgraph "网关安全"
+        Gateway[API网关]
+        AuthFilter[认证过滤器<br/>JWT验证]
+        AuthzFilter[授权过滤器<br/>权限检查]
+    end
+    
+    subgraph "服务安全"
+        AuthService[认证服务<br/>密码加密<br/>BCrypt]
+        BusinessService[业务服务<br/>参数校验<br/>SQL注入防护]
+    end
+    
+    subgraph "数据安全"
+        EncryptDB[(数据库加密<br/>敏感字段加密)]
+        SecureRedis[(Redis安全<br/>密码认证)]
+        SecureMQ[(消息队列安全<br/>访问控制)]
+    end
+    
+    subgraph "审计日志"
+        AuditLog[审计日志<br/>操作记录]
+        SecurityLog[安全日志<br/>异常监控]
+    end
+    
+    Browser --> WAF
+    MobileApp --> WAF
+    WAF --> RateLimit
+    RateLimit --> CORS
+    CORS --> Gateway
+    Gateway --> AuthFilter
+    AuthFilter --> AuthService
+    AuthFilter --> AuthzFilter
+    AuthzFilter --> BusinessService
+    BusinessService --> EncryptDB
+    BusinessService --> SecureRedis
+    BusinessService --> SecureMQ
+    Gateway --> AuditLog
+    AuthService --> SecurityLog
+    BusinessService --> SecurityLog
+    
+    style WAF fill:#ffcccc,stroke:#F44336,stroke-width:2px
+    style RateLimit fill:#ffffcc,stroke:#FFC107,stroke-width:2px
+    style AuthFilter fill:#ccffcc,stroke:#4CAF50,stroke-width:2px
+    style AuthService fill:#ccccff,stroke:#2196F3,stroke-width:2px
+    style EncryptDB fill:#ffccff,stroke:#9C27B0,stroke-width:2px
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>电力交易系统微服务架构设计 | 基于 Spring Cloud Alibaba</p>
+            <p>生成时间: <span id="currentDate"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // 初始化 Mermaid
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            sequence: {
+                diagramMarginX: 50,
+                diagramMarginY: 10,
+                actorMargin: 50,
+                width: 150,
+                height: 65,
+                boxMargin: 10,
+                boxTextMargin: 5,
+                noteMargin: 10,
+                messageMargin: 35
+            }
+        });
+
+        // 显示日期
+        document.getElementById('currentDate').textContent = new Date().toLocaleString('zh-CN');
+
+        // 图表切换功能
+        function showDiagram(diagramId) {
+            // 隐藏所有图表
+            document.querySelectorAll('.diagram-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // 显示选中的图表
+            document.getElementById(diagramId).classList.add('active');
+
+            // 更新按钮状态
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // 重新渲染 Mermaid 图表
+            setTimeout(() => {
+                mermaid.init(undefined, document.getElementById(diagramId).querySelector('.mermaid'));
+            }, 100);
+        }
+    </script>
+</body>
+</html>
